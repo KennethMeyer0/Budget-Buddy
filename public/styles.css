@@ -1,0 +1,554 @@
+html {
+  overflow-y: scroll;
+}
+
+/* === AI‑Modal & Highlight Styles === */
+.modal {
+  position: fixed; top:0; left:0;
+  width:100%; height:100%;
+  background: rgba(0,0,0,0.5);
+  display:flex; justify-content:center; align-items:center;
+  z-index:1000;
+}
+.modal-content {
+  background:#fff; padding:20px; border-radius:5px;
+  max-width:400px; width:90%;
+}
+.close-button {
+  float:right; font-size:20px; cursor:pointer;
+}
+.modal-buttons {
+  margin-top:10px; text-align:right;
+}
+.modal-buttons button {
+  margin-left:10px;
+}
+.ai-notice {
+  text-align:center;
+  font-size:1.2em;
+  margin:15px auto;
+  color:#007bff;
+}
+.ai-response-box {
+  background:#f9f9f9;
+  border:1px solid #ccc;
+  padding:10px;
+  max-height:200px;
+  overflow-y:auto;
+  white-space:pre-wrap;
+  margin:20px auto;
+  width:80%;
+}
+/* Center Ask AI button */
+.ai-button-container {
+  text-align: center;
+  margin: 15px 0;
+}
+
+/* General Styles */
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f4;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  min-height: 100vh;
+}
+
+/* Title Container */
+.title-container {
+  text-align: center;
+  margin-bottom: 20px;
+  margin-top: 20px;
+}
+
+.title-container h1 {
+  color: #000;
+  font-size: 3em;
+  font-weight: bold;
+  margin: 0;
+}
+
+/* Panels Container */
+.panels-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin: 20px auto;
+  max-width: 1400px;
+  gap: 30px;
+  flex-wrap: wrap;
+}
+
+/* Panel Styles */
+.panel {
+  background-color: white;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  flex: 1;
+  max-width: 48%;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  min-width: 400px;
+}
+
+/* Hover and Click Effects */
+.panel:hover {
+  transform: scale(1.02);
+  box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+}
+
+.panel:active {
+  transform: scale(0.98);
+  box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+}
+
+/* Income Panel */
+.income-panel {
+  border-left: 5px solid #007bff;
+}
+
+/* Expense Panel */
+.expense-panel {
+  border-left: 5px solid #dc3545;
+}
+
+/* Input Group */
+.input-group {
+  margin-bottom: 15px;
+}
+
+.input-group label {
+  display: block;
+  margin-bottom: 5px;
+  color: #555;
+  font-size: 1.2em;
+}
+
+/* Prevent line wrapping for Amount labels */
+.nowrap-label {
+  white-space: nowrap;
+}
+
+.input-group input,
+.input-group select {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 1.1em;
+  box-sizing: border-box;
+}
+
+/* Button Styles */
+.button-group button {
+  background-color: #28a745;
+  color: white;
+  border: none;
+  padding: 15px 25px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1.2em;
+}
+
+.button-group button:hover {
+  background-color: #218838;
+}
+
+/* Transaction History and Budget Summary */
+.table-container,
+.summary {
+  background: white;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+/* Budget Summary - Styled and Smaller Panel */
+.summary {
+  background: #fdfdfd;
+  border: 2px solid #ccc;
+  border-radius: 10px;
+  padding: 10px;
+  max-width: 200px;
+  margin: 20px auto;
+  font-size: 1em;
+  color: #333;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  text-align: center;
+}
+.summary h2 {
+  font-size: 1.6em;
+  margin-bottom: 8px;
+}
+.summary p {
+  margin: 10px 0;
+  line-height: 1.8;
+}
+.summary p:last-child {
+  margin-bottom: 0;
+}
+
+/* Table Headers */
+.table-container h2,
+.summary h2 {
+  text-align: center;
+  font-size: 2em;
+  color: #333;
+}
+
+table {
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+  font-size: 1.2em;
+}
+
+th, td {
+  text-align: left;
+  padding: 12px;
+  border-bottom: 1px solid #ddd;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+th {
+  white-space: nowrap;
+  overflow: visible;
+  text-overflow: clip;
+  background-color: #6f90eb;
+  color: white;
+}
+
+/* Allow Description cells to wrap */
+.table-container td:nth-child(1) {
+  white-space: normal;
+  overflow-wrap: break-word;
+  word-break: break-word;
+  min-width: 150px;
+}
+
+/* For the Category column in income, allow wrapping if needed */
+.table-container td:nth-child(2) {
+  white-space: normal;
+  overflow-wrap: break-word;
+  word-break: break-word;
+  min-width: 150px;
+}
+
+/* For expense transactions, keep Category on one line with a larger minimum width */
+.expense-history td:nth-child(2) {
+  white-space: nowrap;
+  overflow: visible;
+  text-overflow: clip;
+  min-width: 300px;
+}
+
+/* Expense Transactions Header for Category */
+.expense-history th:nth-child(2) {
+  white-space: nowrap;
+  min-width: 300px;
+}
+
+/* Expense Transactions Table Header */
+.expense-history th {
+  background-color: #dc3545;
+}
+
+/* Force table containers to mimic input panels */
+.table-container {
+  width: 48%;
+}
+
+/* Transaction Tables Container */
+.transaction-tables-container {
+  display: flex;
+  justify-content: space-between;
+  gap: 25px;
+  width: 100%;
+  max-width: 1200px;
+}
+
+/* Action Buttons Container */
+.action-buttons {
+  display: flex;
+  justify-content: space-between;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+.action-buttons button {
+  flex: 1;
+  margin: 0 2px;
+  box-sizing: border-box;
+  padding: 8px 4px;
+  font-size: 0.85em;
+}
+
+/* Fixed Width for Action Column - 150px */
+table th:last-child,
+table td:last-child {
+  width: 150px;
+  min-width: 150px;
+  overflow: visible !important;
+  white-space: normal !important;
+}
+
+/* Edited Row Higher Stacking */
+tr.editing {
+  position: relative;
+  z-index: 2;
+}
+
+/* Edit Input Fields */
+td input.edit-input {
+  width: 100%;
+  display: block;
+  box-sizing: border-box;
+}
+
+/* Force Edit Buttons to be Yellow */
+.edit-btn {
+  background-color: #ffc107 !important;
+  color: white !important;
+}
+
+/* Login Container - Centered and Styled */
+#login-container {
+  background-color: #fff;
+  padding: 40px 30px;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  width: 300px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+
+/* Logout Container - Positioned in Top Right */
+.logout-container {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+
+/* Top-Left Image Styling - Logo Bigger */
+.top-left-image {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 10;
+}
+.top-left-image img {
+  width: 300px;
+  height: auto;
+  border-radius: 5px;
+}
+
+/* Background Image */
+body {
+  background-image: url('Budget-Buddy Background.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+body::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255,255,255,0.5);
+  z-index: -1;
+}
+
+.chart-container {
+  width: 400px;
+  height: 400px;
+  margin: 20px auto;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #f4f4f9;
+}
+
+/* Budget Progress Styling */
+.budget-progress-container {
+  text-align: center;
+  margin: 20px auto;
+  width: 80%;
+}
+.progress-bar {
+  background-color: #e0e0e0;
+  border-radius: 10px;
+  width: 100%;
+  height: 10px;
+  position: relative;
+  overflow: hidden;
+  margin-top: 10px;
+}
+.progress {
+  background-color: #28a745;
+  height: 100%;
+  width: 0%;
+  transition: width 0.3s ease-in-out;
+}
+.warning-text {
+  color: red;
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+/* Input Group for Budget Goal */
+.input-group {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+#budget-goal {
+  width: 100px;
+  padding: 5px;
+  font-size: 1rem;
+  text-align: center;
+}
+.input-group button {
+  background-color: #007bff;
+  color: white;
+  padding: 5px 10px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background-color 0.3s ease-in-out;
+}
+.input-group button:hover {
+  background-color: #0056b3;
+}
+
+/* Report Buttons Container (Export and PDF) */
+.report-buttons-container {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin: 20px auto;
+}
+.report-buttons-container button {
+  background-color: #007bff;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease-in-out;
+}
+.report-buttons-container button:hover {
+  background-color: #0056b3;
+}
+
+/* Import Container - Updated Styling */
+#import-container {
+  background-color: #fff;
+  border: 2px dashed #007bff;
+  border-radius: 10px;
+  padding: 20px;
+  margin: 20px auto;
+  max-width: 400px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  text-align: center;
+}
+#import-container h3 {
+  margin-top: 0;
+  color: #007bff;
+  font-weight: bold;
+}
+
+/* Month/Year Selector Styling */
+#month-selector {
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  padding: 10px 15px;
+  margin: 10px auto;
+  max-width: 400px;
+  text-align: center;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+#month-selector label {
+  font-size: 1.1em;
+  color: #333;
+  margin-right: 10px;
+}
+#month-selector select {
+  padding: 5px;
+  font-size: 1em;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+/* Summary and Charts Container */
+.summary-charts-container {
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+  gap: 20px;
+  width: 100%;
+  max-width: 1200px;
+  margin: 20px auto;
+}
+
+/* Expense Breakdown Title (Above Pie Chart) styled like the Bar Chart title */
+#pieChartContainer h3 {
+  text-align: center;
+  font-size: 16px;
+  font-weight: bold;
+  margin-bottom: 10px;
+  color: #333;
+}
+
+/* Top Buttons Styling */
+button {
+  background-color: #4CAF50;
+  color: white;
+  padding: 10px 20px;
+  margin: 5px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+}
+button:hover {
+  background-color: #45a049;
+}
+button:active {
+  background-color: #3e8e41;
+  transform: scale(0.98);
+}
+
+/* --- Overrides for Delete and Add Expense Buttons --- */
+.delete-btn {
+  background-color: #dc3545 !important;
+  color: white !important;
+}
+.delete-btn:hover {
+  background-color: #a71d2a !important;
+}
+.expense-panel .button-group button {
+  background-color: #dc3545 !important;
+}
+.expense-panel .button-group button:hover {
+  background-color: #a71d2a !important;
+}
