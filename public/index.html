@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Budget-Buddy</title>
+  <link rel="stylesheet" href="styles.css"/>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+</head>
+<body>
+  <!-- Login Page Wrapper -->
+  <div id="login-wrapper">
+    <!-- Login Header Section -->
+    <div id="login-header-section" style="margin-top: 100px;">
+      <div class="top-left-image">
+        <img src="Budget-Buddy.PNG" alt="Logo" />
+      </div>
+      <h1 class="page-title" style="text-align: center;">Budget-Buddy</h1>
+      <p class="welcome-message" style="font-size: 1.1em; line-height: 1.5; max-width: 800px; margin: 5px auto;">
+        Welcome to Budget-Buddy! Your personal budgeting assistant is here to simplify your financial journey. Log in or create an account to start taking control of your finances and achieve your goals with ease.
+      </p>
+    </div>
+    <!-- Login Container -->
+    <div id="login-container">
+      <h2 id="login-header">Login</h2>
+      <div class="input-group">
+        <label for="username">Username</label>
+        <input type="text" id="username" placeholder="Enter username" />
+      </div>
+      <div class="input-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" placeholder="Enter password" />
+      </div>
+      <div class="button-group">
+        <button id="login-button" onclick="login()">Login</button>
+      </div>
+      <p id="toggle-login-mode">
+        Don't have an account? <a href="#" onclick="toggleLoginMode()">Create Account</a>
+      </p>
+    </div>
+  </div>
+
+  <!-- App Container (hidden until login) -->
+  <div id="app-container" style="display:none;">
+    <!-- Logout Button -->
+    <div class="logout-container">
+      <button onclick="logout()">Logout</button>
+    </div>
+    <!-- Top-Left Logo -->
+    <div class="top-left-image">
+      <img src="Budget-Buddy.PNG" alt="Logo" />
+    </div>
+    <!-- Title -->
+    <div class="title-container">
+      <h1>Budget-Buddy</h1>
+    </div>
+    <!-- Import Excel -->
+    <div id="import-container">
+      <h3>Import Excel Data</h3>
+      <input type="file" id="upload" />
+    </div>
+    <!-- Month/Year Selector -->
+    <div id="month-selector">
+      <label for="month-select">Select Month:</label>
+      <select id="month-select">
+        <option value="January">January</option>
+        <option value="February">February</option>
+        <option value="March">March</option>
+        <option value="April">April</option>
+        <option value="May">May</option>
+        <option value="June">June</option>
+        <option value="July">July</option>
+        <option value="August">August</option>
+        <option value="September">September</option>
+        <option value="October">October</option>
+        <option value="November">November</option>
+        <option value="December">December</option>
+      </select>
+      <label for="year-select">Year:</label>
+      <select id="year-select">
+        <option value="2022">2022</option>
+        <option value="2023">2023</option>
+        <option value="2024">2024</option>
+        <option value="2025" selected>2025</option>
+      </select>
+    </div>
+
+    <!-- Panels Section -->
+    <main class="panels-container">
+      <!-- Income Panel -->
+      <div class="panel income-panel">
+        <h2>Income</h2>
+        <div class="input-group">
+          <label for="income-category">Category</label>
+          <input type="text" id="income-category" placeholder="e.g. Salary" />
+        </div>
+        <div class="input-group">
+          <label for="income-description">Description</label>
+          <input type="text" id="income-description" placeholder="e.g. January Paycheck" />
+        </div>
+        <div class="input-group">
+          <label for="income-amount" class="nowrap-label">Amount ($)</label>
+          <input type="number" id="income-amount" placeholder="e.g. 5000" />
+        </div>
+        <div class="button-group">
+          <button onclick="addIncome()">Add Income</button>
+        </div>
+      </div>
+      <!-- Expense Panel -->
+      <div class="panel expense-panel">
+        <h2>Expenses</h2>
+        <div class="input-group">
+          <label for="expense-category">Category</label>
+          <input type="text" id="expense-category" placeholder="e.g. Rent" />
+        </div>
+        <div class="input-group">
+          <label for="expense-description">Description</label>
+          <input type="text" id="expense-description" placeholder="e.g. January Rent" />
+        </div>
+        <div class="input-group">
+          <label for="expense-amount" class="nowrap-label">Amount ($)</label>
+          <input type="number" id="expense-amount" placeholder="e.g. 1000" />
+        </div>
+        <div class="button-group">
+          <button onclick="addExpense()">Add Expense</button>
+        </div>
+      </div>
+    </main>
+
+    <!-- Budget Progress Section -->
+    <div class="budget-progress-container">
+      <h2>Budget Goal</h2>
+      <div class="input-group">
+        <label for="budget-goal">Set Budget Goal ($)</label>
+        <input type="number" id="budget-goal" placeholder="e.g. 400" />
+        <button onclick="lockBudget()">Lock Budget</button>
+        <button onclick="deleteBudget()">Delete Budget</button>
+      </div>
+      <div class="progress-bar">
+        <div id="progress" class="progress"></div>
+      </div>
+      <p id="progress-text">Progress: 0%</p>
+      <p id="budget-warning" class="warning-text" style="display:none;">
+        You are reaching your max budget goal!
+      </p>
+    </div>
+
+    <!-- Transaction History -->
+    <div class="transaction-tables-container">
+      <div class="table-container income-history">
+        <h2>Income Transactions</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Description</th>
+              <th>Category</th>
+              <th>Amount ($)</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="income-transaction-history"></tbody>
+        </table>
+      </div>
+      <div class="table-container expense-history">
+        <h2>Expense Transactions</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Description</th>
+              <th>Category</th>
+              <th>Amount ($)</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="expense-transaction-history"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Summary & Charts -->
+    <div class="summary-charts-container">
+      <div class="chart-container" id="barChartContainer">
+        <canvas id="barChart"></canvas>
+      </div>
+      <div class="summary">
+        <h2>Budget Summary</h2>
+        <p>Total Income: <span id="total-income">$0.00</span></p>
+        <p>Total Expenses: <span id="total-expense">$0.00</span></p>
+        <p>Balance: <span id="balance">$0.00</span></p>
+      </div>
+      <div class="chart-container" id="pieChartContainer">
+        <h3>Expense Breakdown</h3>
+        <canvas id="incomeExpenseChart"></canvas>
+      </div>
+    </div>
+
+    <!-- Report Buttons -->
+    <div class="report-buttons-container">
+      <button onclick="exportToExcel()">Export to Excel</button>
+      <button onclick="generatePDF()">Generate PDF Report</button>
+    </div>
+
+    <!-- Highlight AI Feature -->
+    <div class="ai-notice">💡 Try our new AI Chat Assistant below!</div>
+
+    <!-- Centered Ask AI Button -->
+    <div class="ai-button-container">
+      <button id="ai-button">Ask AI</button>
+    </div>
+
+    <!-- Inline AI Response -->
+    <pre id="ai-response" class="ai-response-box"></pre>
+
+    <!-- AI Prompt Modal -->
+    <div id="ai-modal" class="modal" style="display:none;">
+      <div class="modal-content">
+        <span class="close-button">&times;</span>
+        <p id="ai-modal-text">Ask Budget‑Buddy AI</p>
+        <textarea id="ai-modal-input" rows="4" style="width:100%;"></textarea>
+        <div class="modal-buttons">
+          <button id="ai-modal-submit">Submit</button>
+          <button id="ai-modal-cancel">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
