@@ -1,4 +1,4 @@
-ITC 4940
+ITC 4940: Capstone Project
 Kenneth Meyer
 Garrett Nobles
 David Bunker
